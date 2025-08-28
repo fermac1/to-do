@@ -42,32 +42,43 @@ const attachments: Attachment[] = [
         </button>
       </div>
 
-      <div class="border border-[#E6E6E673] rounded-[12px]">
-          <div class="flex justify-between items-start p-6">
-           <div>
-             <h2 class="text-[20px] text-[#37404E] font-semibold">User Research</h2>
-             <div class="flex gap-2 mt-2">
-               <span class="px-2 py-1 text-sm bg-yellow-100 text-yellow-700 rounded">In Progress</span>
-               <span class="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded">Personal</span>
-             </div>
-           </div>
+      <div class="border border-[#E6E6E673] rounded-[12px] overflow-y-auto">
+          <div class="p-6">
+            <div class="space-x-6">
+             <span class="text-[20px] text-[#37404E] font-semibold">User Research</span>
+             <span class="px-4 py-1 bg-[#ECC94B40] text-[#A78406] text-[12px] font-normal rounded-full">In Progress</span>
+             <span class="px-2 py-1 bg-pink-100 text-pink-700 text-[12px] font-normal rounded-full">Personal</span>
+            </div>
+             <p class="text-[#37404E] text-[12px] font-light">Task #1</p>
          </div>
    
          <!-- Content -->
          <div class="p-6 overflow-y-auto space-y-6 flex-1">
            <!-- Task Info -->
-           <div class="flex items-center justify-between">
-             <div class="flex items-center gap-2">
-               <span class="text-gray-500">Due date</span>
-               <span class="font-medium">March 25, 2025</span>
+           <div class="flex items-center">
+             <div class="flex items-center gap-2 mr-4">
+                <span class="bg-[#E0E7FF] px-2 py-1 border border-[#E5E7EB] rounded-full"><Icon name="iconamoon:clock" class="text-[#4F46E5]"/></span>
+                
+                <div class="text-[12px]">
+                    <p class="text-[#6B7280] font-light">Due date</p>
+                    <p class="font-medium text-[#000000]">March 25, 2025</p>
+                </div>
              </div>
-             <span class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded">High Priority</span>
+             <div class="flex items-center gap-2">
+                <span class="bg-[#F8CECE] px-2 py-1 border border-[#E5E7EB] rounded-full"><Icon name="heroicons:flag-16-solid" class="text-[#FB0404]" /></span>
+                <div class="text-[12px]">
+                    <p class="text-[#6B7280] font-light">Priority</p>
+                    <p class="font-medium text-[#000000]">High Priority</p>
+                </div>
+             </div>
            </div>
+
+           <div class="-mx-6 w-[calc(100%+3rem)] h-px bg-[#E6E6E673] mt-20 mb-12"></div>
    
            <!-- Description -->
            <div>
-             <h3 class="font-medium mb-2">Description</h3>
-             <p class="text-gray-600 leading-relaxed">
+             <h3 class="font-bold text-[#37404E] text-[16px] mb-2">Description</h3>
+             <p class="text-[#37404E] text-[12px] font-light leading-relaxed">
                We need to implement the new homepage design according to the approved mockups. 
                This includes We need to implement the new homepage design according to the approved mockups. 
                This includes We need to implement the new homepage design according to the approved mockups.
@@ -76,18 +87,18 @@ const attachments: Attachment[] = [
    
            <!-- Subtasks -->
            <div>
-             <h3 class="font-medium mb-2">Add Subtasks (Optional)</h3>
+             <h3 class="font-medium text-[#37404E] text-[14px] font-semibold mb-2">Add Subtasks <span class="font-light text-[#37404E] text-[10px]">(Optional)</span></h3>
              <div class="space-y-2">
-               <label class="flex items-center gap-2">
-                 <input type="checkbox" checked class="rounded border-gray-300 text-indigo-600" />
+               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
+                 <input type="checkbox" checked class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
                  About us page
                </label>
-               <label class="flex items-center gap-2">
-                 <input type="checkbox" class="rounded border-gray-300 text-indigo-600" />
+               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
+                 <input type="checkbox" class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
                  Home page
                </label>
-               <label class="flex items-center gap-2">
-                 <input type="checkbox" class="rounded border-gray-300 text-indigo-600" />
+               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
+                 <input type="checkbox" class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
                  Blog page
                </label>
              </div>
@@ -96,7 +107,7 @@ const attachments: Attachment[] = [
            <!-- Attachments -->
            <div>
              <h3 class="font-medium mb-2">Attachment</h3>
-             <div class="flex gap-4">
+             <div class="flex gap-10">
                <div
                  v-for="file in attachments"
                  :key="file.name"

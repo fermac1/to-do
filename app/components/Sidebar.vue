@@ -1,11 +1,10 @@
 <template>
   <aside class="w-64 bg-white shadow-md flex flex-col">
-    <div class="px-6 py-7 font-bold text-[11px] text-[#1F1F1F] flex flex-row">
-        <img src="/images/dashboard-img.png" alt="" class="bg-[#000985] rounded-[33px]">
-       <span> HIZO TASKLY</span>
+    <div class="px-6 py-7 font-bold text-[#1F1F1F]">
+      <span class="bg-[#000985] px-2 py-1 rounded-[33px] mr-2"><Icon name="solar:bookmark-square-minimalistic-linear" class="text-[#ffffff] "/></span>
+       <span class="text-[14px]"> HIZO TASKLY</span>
     </div>
-
-    
+  
     <!-- Divider -->
     <div class="border-t border-gray-200"></div>
 

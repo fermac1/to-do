@@ -20,6 +20,7 @@ const tabs = ['All To dos', 'Completed', 'In Progress', 'Pending']
 const activeTab = ref('All To dos')
 
 const sidebarOpen = ref(false)
+const sidebarFormOpen = ref(false)
 
 interface Task {
   id: number
@@ -64,17 +65,21 @@ const tagClass = (tag: string) => {
   return 'bg-[#F6F7F9] text-[#485465]'
 }
 
+const task = {
+  progress: 50
+}
+
 </script>
 
 <template>
-  <div class="p-6 font-plusJakartaSans">
+  <div class="shadow rounded-lg bg-[#ffffff] p-6 border border-gray-200  font-plusJakartaSans">
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
       <div class="text-[#37404E]">
         <h1 class="text-[22px] font-bold">Task Management</h1>
         <p class="text-[13px] font-light">Let's get those tasks done and keep your day moving forward.</p>
       </div>
-      <button class="bg-[#0513D1] text-[#ffffff] p-4 rounded-lg flex items-center gap-2 text-[14px] font-semibold">
+      <button @click="sidebarFormOpen = true" class="bg-[#0513D1] text-[#ffffff] px-4 py-3 rounded-lg flex items-center gap-2 text-[14px] font-semibold">
         <Icon name="fluent:add-square-20-filled" class=""/> New Task
       </button>
     </div>
@@ -91,7 +96,7 @@ const tagClass = (tag: string) => {
     </div>
 
     <!-- Task Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" @click="sidebarOpen = true">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 cursor-pointer" >
       <div 
         v-for="task in filteredTasks" 
         :key="task.id"
@@ -99,7 +104,7 @@ const tagClass = (tag: string) => {
         
         <!-- Title and Priority -->
         <div class="flex justify-between items-start mb-4">
-          <h2 class="font-bold text-[15px] text-[#2E2E2E]">{{ task.title }}</h2>
+          <h2 class="font-bold text-[15px] text-[#2E2E2E]" @click="sidebarOpen = true">{{ task.title }}</h2>
           <span 
             :class="priorityClass(task.priority)"
             class="text-[9px] px-2 py-1 rounded font-medium">
@@ -122,14 +127,14 @@ const tagClass = (tag: string) => {
               <span 
                 v-for="tag in task.tags" 
                 :key="tag" 
-                class="p-2 text-[8px] font-normal border border-[#E5E7EB] rounded-xl"
+                class="px-2 py-1 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
                 :class="tagClass(tag)">
                 {{ tag }}
               </span>
             </div>
     
             <!-- Icons -->
-            <div class="flex justify-end gap-3 mb-4 text-gray-400">
+            <div class="flex justify-end gap-2 mb-4 text-gray-400">
               <button title="Edit" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1">
                 <Icon name="hugeicons:edit-02" />
               </button>
@@ -140,21 +145,45 @@ const tagClass = (tag: string) => {
         </div>
 
         <!-- Progress Bar -->
+
+      <div class="relative w-full group">
+        <!-- Progress Bar -->
         <div class="h-1 bg-[#F3F4FC] rounded-[9px] mb-4">
+          <div
+            class="h-1 bg-[#00043D] rounded-[9px] transition-all duration-300"
+            :style="{ width: task.progress + '%' }"
+          ></div>
+        </div>
+
+        <!-- Tooltip -->
+        <div
+          class="absolute -top-7 transform -translate-x-1/2 bg-[#00043D] text-white text-xs font-semibold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300"
+          :style="{ left: task.progress + '%' }"
+        >
+          {{ task.progress }}%
+          <div
+            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#00043D]"
+          ></div>
+        </div>
+      </div>
+
+
+        <!-- <div class="h-1 bg-[#F3F4FC] rounded-[9px] mb-4">
           <div 
             class="h-1 bg-[#00043D] rounded-[9px]" 
             :style="{ width: task.progress + '%' }">
           </div>
-        </div>
+        </div> -->
 
         <!-- Completed Checkbox -->
         <label class="flex items-center text-[10px] font-medium gap-2">
-          <input type="checkbox" v-model="task.completed" class="w-4 h-4" />
+          <input type="checkbox" v-model="task.completed" class="w-4 h-4 accent-[#00043D]" />
           <span class="text-[#A8A8A8]">{{ task.completed ? 'Completed' : 'Mark as completed' }}</span>
         </label>
       </div>
     </div>
 
     <TaskSidebar :open="sidebarOpen" :onClose="() => sidebarOpen = false" />
+    <TaskForm :open="sidebarFormOpen" :onClose="() => sidebarFormOpen = false" />
   </div>
 </template>

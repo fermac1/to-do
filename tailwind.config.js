@@ -5,6 +5,7 @@ export default {
     extend: {
        fontFamily: {
         plusJakartaSans: ['Plus Jakarta Sans', 'sans-serif'],
+        // balgin: ['"Balgin Black"', 'sans-serif']
       },
     },
   },
