@@ -1,5 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
+
+const todoStore = useTodoStore()
+
+const route = useRoute()
+
+const { todos } = storeToRefs(todoStore)
+
+const todoId = Number(route.params.id);
+
+const todo = computed(()=>todos.value.find((t) => t.id === Number(route?.params?.id)))
+
 
 interface Attachment {
   name: string
@@ -7,10 +18,30 @@ interface Attachment {
   type: string
 }
 
+interface Item {
+   id: number
+  title: string
+  description: string
+  dueDate: string
+  priority: string
+  // category: string
+  status: string
+  tags: string[]
+  completed: boolean
+  progress: number
+  subtasks?: Array<{
+        id: number
+        title: string
+        isDone: boolean
+      }>
+}
+
 const props = defineProps<{
   open: boolean
-  onClose: () => void
+  onClose: () => void,
+  item: Item | null 
 }>()
+
 
 // Demo attachments
 const attachments: Attachment[] = [
@@ -45,11 +76,12 @@ const attachments: Attachment[] = [
       <div class="border border-[#E6E6E673] rounded-[12px] overflow-y-auto">
           <div class="p-6">
             <div class="space-x-6">
-             <span class="text-[20px] text-[#37404E] font-semibold">User Research</span>
-             <span class="px-4 py-1 bg-[#ECC94B40] text-[#A78406] text-[12px] font-normal rounded-full">In Progress</span>
-             <span class="px-2 py-1 bg-pink-100 text-pink-700 text-[12px] font-normal rounded-full">Personal</span>
+             <span class="text-[20px] text-[#37404E] font-semibold">{{ props?.item?.title }}</span>
+             <span class="px-4 py-1 bg-[#ECC94B40] text-[#A78406] text-[12px] font-normal rounded-full">{{ props?.item?.status }}</span>
+             <!-- <span class="px-2 py-1 bg-pink-100 text-pink-700 text-[12px] font-normal rounded-full">{{ props?.item?.category }}</span> -->
+             <span class="px-2 py-1 bg-pink-100 text-pink-700 text-[12px] font-normal rounded-full">{{ props?.item?.tags[0] }}</span>
             </div>
-             <p class="text-[#37404E] text-[12px] font-light">Task #1</p>
+             <p class="text-[#37404E] text-[12px] font-light">#{{ props?.item?.id }}</p>
          </div>
    
          <!-- Content -->
@@ -61,14 +93,14 @@ const attachments: Attachment[] = [
                 
                 <div class="text-[12px]">
                     <p class="text-[#6B7280] font-light">Due date</p>
-                    <p class="font-medium text-[#000000]">March 25, 2025</p>
+                    <p class="font-medium text-[#000000]">{{ props?.item?.dueDate }}</p>
                 </div>
              </div>
              <div class="flex items-center gap-2">
                 <span class="bg-[#F8CECE] px-2 py-1 border border-[#E5E7EB] rounded-full"><Icon name="heroicons:flag-16-solid" class="text-[#FB0404]" /></span>
                 <div class="text-[12px]">
                     <p class="text-[#6B7280] font-light">Priority</p>
-                    <p class="font-medium text-[#000000]">High Priority</p>
+                    <p class="font-medium text-[#000000]">{{ props?.item?.priority }}</p>
                 </div>
              </div>
            </div>
@@ -78,31 +110,44 @@ const attachments: Attachment[] = [
            <!-- Description -->
            <div>
              <h3 class="font-bold text-[#37404E] text-[16px] mb-2">Description</h3>
-             <p class="text-[#37404E] text-[12px] font-light leading-relaxed">
-               We need to implement the new homepage design according to the approved mockups. 
-               This includes We need to implement the new homepage design according to the approved mockups. 
-               This includes We need to implement the new homepage design according to the approved mockups.
-             </p>
+             <p class="text-[#37404E] text-[12px] font-light leading-relaxed">{{ props?.item?.description }}</p>
            </div>
    
            <!-- Subtasks -->
-           <div>
+           <!-- <div v-if="props?.item?.subtasks?.length > 0">
              <h3 class="font-medium text-[#37404E] text-[14px] font-semibold mb-2">Add Subtasks <span class="font-light text-[#37404E] text-[10px]">(Optional)</span></h3>
              <div class="space-y-2">
-               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
+               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light" v-for="todoTask in props?.item?.subtasks" :key="todoTask">
                  <input type="checkbox" checked class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
-                 About us page
+                {{ todoTask }}
                </label>
-               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
-                 <input type="checkbox" class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
-                 Home page
-               </label>
-               <label class="flex items-center gap-2 text-[#37404E] text-[11px] font-light">
-                 <input type="checkbox" class="rounded border-gray-300 bg-[#0D1CF2] text-[#ffffff]" />
-                 Blog page
-               </label>
+               
              </div>
-           </div>
+           </div> -->
+
+           
+            <div v-if="props?.item?.subtasks && props?.item?.subtasks.length">
+              <h4 class="text-sm font-medium text-gray-700 mb-2">Subtasks</h4>
+              <ul class="space-y-1">
+                <li
+                  v-for="(subtask, index) in props?.item?.subtasks"
+                  :key="index"
+                  class="flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    v-model="props?.item?.subtasks[index]"
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded"
+                  />
+                  <span
+                    :class="{ 'line-through text-gray-400': subtask.isDone }"
+                    class="text-sm text-gray-700"
+                  >
+                    {{ subtask.title }}
+                  </span>
+                </li>
+              </ul>
+            </div>
    
            <!-- Attachments -->
            <div>

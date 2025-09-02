@@ -37,6 +37,7 @@ const addSubtask = () => {
 
     <!-- Add button -->
     <button
+    type="button"
       @click="addSubtask"
       class="ml-4 flex items-center justify-center w-8 h-8 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100"
     >

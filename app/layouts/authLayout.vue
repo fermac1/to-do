@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen grid grid-cols-1 md:grid-cols-2 font-plusJakartaSans">
+  <div class="min-h-screen md:grid md:grid-cols-2 font-plusJakartaSans">
     <!-- Left side -->
-    <div class="flex flex-col justify-center px-8 md:px-12 bg-gradient-to-br from-[#000FE224] via-white to-[#000FE234]  relative">
+    <div class="hidden md:flex flex-col justify-center px-8 md:px-12 bg-gradient-to-br from-[#000FE224] via-white to-[#000FE234] relative">
         <div class="max-w-md absolute bottom-[100px]">
             <h1 class="text-[20px] md:text-[40px] font-bold mb-4 text-[#010101]">
             Your Tasks, Always under your control
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Right side -->
-    <div class="flex justify-center items-center px-8 bg-[#FDFDFD]">
+    <div class="md:flex md:justify-center items-center px-8 bg-[#FDFDFD] w-full">
       <slot />
     </div>
   </div>

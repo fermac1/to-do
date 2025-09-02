@@ -2,13 +2,17 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/icon', '@nuxtjs/tailwindcss', '@nuxt/image'],
+  modules: ['@nuxt/icon', '@nuxtjs/tailwindcss', '@nuxt/image', '@pinia/nuxt',  'pinia-plugin-persistedstate/nuxt'],
   css: ['~/assets/css/tailwind.css'],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+
+  icon: {
+    provider: 'iconify',
   },
 
   app: {

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-
 definePageMeta({
   layout: 'dashboard-layout'
 })
 
 import { Icon } from '#components'
 import { ref, computed } from 'vue'
-
 import { usePageTitle } from '~/composables/usePageTitle'
+import { useTodoStore } from '@/stores/todo'
+import { storeToRefs } from 'pinia'
 
 const { pageTitle } = usePageTitle()
 pageTitle.value = 'Tasks'
@@ -16,37 +16,75 @@ useHead({
   title: pageTitle.value
 })
 
+// Pinia store
+const todoStore = useTodoStore()
+const { todos } = storeToRefs(todoStore)
+
 const tabs = ['All To dos', 'Completed', 'In Progress', 'Pending']
 const activeTab = ref('All To dos')
 
 const sidebarOpen = ref(false)
 const sidebarFormOpen = ref(false)
 
-interface Task {
+// Map store todos to UI format
+const mappedTasks = computed(() =>
+  todos.value.map(todo => {
+    let progress = 0
+
+    if (todo.subtasks && todo.subtasks.length > 0) {
+      const completedSubtasks = todo.subtasks.filter(s => s.completed).length
+      progress = Math.round((completedSubtasks / todo.subtasks.length) * 100)
+    } else {
+      progress = todo.isCompleted ? 100 : 0
+    }
+
+    let status: 'Completed' | 'In Progress' | 'Pending' = 'Pending'
+    if (progress === 100) status = 'Completed'
+    else if (progress > 0) status = 'In Progress'
+
+    return {
+      id: todo.id,
+      title: todo.title,
+      description: todo.description,
+      dueDate: todo.date,
+      priority: todo.priority === 'high' ? 'High' : todo.priority === 'mid' ? 'Mid' : 'Low',
+      status,
+      tags: [todo.category],
+      completed: todo.isCompleted,
+      progress,
+      subtasks: todo?.subtasks
+    }
+  })
+)
+
+type MappedTask = {
   id: number
   title: string
   description: string
   dueDate: string
-  priority: 'High' | 'Mid' | 'Low'
-  status: 'Completed' | 'In Progress' | 'Pending'
+  priority: string
+  status: string
   tags: string[]
   completed: boolean
   progress: number
+  subtasks?: []
 }
 
-const tasks = ref<Task[]>([
-  { id: 1, title: 'User Research', description: 'Conduct user research on Fintech mobile apps...', dueDate: 'Mar 14th 2025', priority: 'High', status: 'Completed', tags: ['Completed', 'Work'], completed: true, progress: 100 },
-  { id: 2, title: 'Landing Page', description: 'Create landing page for app...', dueDate: 'Mar 14th 2025', priority: 'Mid', status: 'In Progress', tags: ['In Progress', 'Personal'], completed: false, progress: 50 },
-  { id: 3, title: 'About us page for Taskly', description: 'Write about us content...', dueDate: 'Mar 14th 2025', priority: 'Low', status: 'Pending', tags: ['Pending', 'Work'], completed: false, progress: 20 },
-  { id: 4, title: 'Mobile Responsiveness', description: 'Ensure mobile responsive design...', dueDate: 'Mar 14th 2025', priority: 'Mid', status: 'In Progress', tags: ['In Progress', 'Personal'], completed: false, progress: 60 }
-])
+const selectedTask = ref<MappedTask | null>(null)
 
-const filteredTasks = computed(() => {
-  if (activeTab.value === 'All To dos') return tasks.value
-  if (activeTab.value === 'Completed') return tasks.value.filter(t => t.status === 'Completed')
-  if (activeTab.value === 'In Progress') return tasks.value.filter(t => t.status === 'In Progress')
-  if (activeTab.value === 'Pending') return tasks.value.filter(t => t.status === 'Pending')
-  return tasks.value
+
+const openModal = (item: MappedTask) => {
+  selectedTask.value = item
+  sidebarOpen.value = true
+}
+
+
+const filteredMappedTasks = computed(() => {
+  if (activeTab.value === 'All To dos') return mappedTasks.value
+  if (activeTab.value === 'Completed') return mappedTasks.value.filter(t => t.status === 'Completed')
+  if (activeTab.value === 'In Progress') return mappedTasks.value.filter(t => t.status === 'In Progress')
+  if (activeTab.value === 'Pending') return mappedTasks.value.filter(t => t.status === 'Pending')
+  return mappedTasks.value
 })
 
 const priorityClass = (priority: string) => {
@@ -56,31 +94,33 @@ const priorityClass = (priority: string) => {
   return ''
 }
 
-const tagClass = (tag: string) => {
-  if (tag === 'Completed') return 'bg-[#48BB7840] text-[#2B824F]'
-  if (tag === 'In Progress') return 'bg-[#FCFAF3] text-[#A78406]'
-  if (tag === 'Pending') return 'bg-[#F6F7F9] text-[#485465]'
-  if (tag === 'Work') return 'bg-[#C200B51F] text-[#C200B5]'
-  if (tag === 'Personal') return 'bg-[#C200B51F] text-[#C200B5]'
-  return 'bg-[#F6F7F9] text-[#485465]'
+// Handle checkbox toggle to update store
+const toggleCompleted = (taskId: number, value: boolean) => {
+  const todo = todoStore.todos.find(t => t.id === taskId)
+  if (todo) {
+    todo.isCompleted = value
+  }
 }
 
-const task = {
-  progress: 50
+function deleteTask(id: number) {
+  if (window.confirm('Are you sure you want to delete this task?')) {
+    todoStore.deleteTodo(id)
+  }
 }
-
 </script>
 
 <template>
-  <div class="shadow rounded-lg bg-[#ffffff] p-6 border border-gray-200  font-plusJakartaSans">
+  <div class="shadow rounded-lg bg-[#ffffff] p-6 border border-gray-200 font-plusJakartaSans">
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
       <div class="text-[#37404E]">
         <h1 class="text-[22px] font-bold">Task Management</h1>
         <p class="text-[13px] font-light">Let's get those tasks done and keep your day moving forward.</p>
       </div>
-      <button @click="sidebarFormOpen = true" class="bg-[#0513D1] text-[#ffffff] px-4 py-3 rounded-lg flex items-center gap-2 text-[14px] font-semibold">
-        <Icon name="fluent:add-square-20-filled" class=""/> New Task
+      <button 
+        @click="sidebarFormOpen = true" 
+        class="bg-[#0513D1] text-[#ffffff] px-4 py-3 rounded-lg flex items-center gap-2 text-[14px] font-semibold">
+        <Icon name="fluent:add-square-20-filled" /> New Task
       </button>
     </div>
 
@@ -96,15 +136,15 @@ const task = {
     </div>
 
     <!-- Task Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 cursor-pointer" >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 cursor-pointer">
       <div 
-        v-for="task in filteredTasks" 
+        v-for="task in filteredMappedTasks" 
         :key="task.id"
         class="border rounded-lg p-4 shadow-sm bg-white">
         
         <!-- Title and Priority -->
         <div class="flex justify-between items-start mb-4">
-          <h2 class="font-bold text-[15px] text-[#2E2E2E]" @click="sidebarOpen = true">{{ task.title }}</h2>
+          <h2 class="font-bold text-[15px] text-[#2E2E2E]" @click="openModal(task)">{{ task.title }}</h2>
           <span 
             :class="priorityClass(task.priority)"
             class="text-[9px] px-2 py-1 rounded font-medium">
@@ -114,76 +154,113 @@ const task = {
         
         <!-- Task ID and Due Date -->
         <div class="flex justify-between text-[#7F7F7F] mb-4">
-          <span class="text-[13px] font-semibold ">Task #{{ task.id }}</span>
-          <span class="text-[10px] font-medium ">Due {{ task.dueDate }}</span>
+          <span class="text-[13px] font-semibold">Task #{{ task.id }}</span>
+          <span class="text-[10px] font-medium">Due {{ task.dueDate }}</span>
         </div>
+
+        <div v-if="task.subtasks && task.subtasks.length">
+          <h4 class="text-sm font-medium text-gray-700 mb-2">Subtasks</h4>
+          <ul class="space-y-1">
+            <li
+              v-for="(subtask, index) in task.subtasks"
+              :key="index"
+              class="flex items-center gap-2"
+            >
+              <input
+                type="checkbox"
+                v-model="task.subtasks[index].isDone"
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded"
+              />
+              <span
+                :class="{ 'line-through text-gray-400': subtask.isDone }"
+                class="text-sm text-gray-700"
+              >
+                {{ subtask.title }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
 
         <!-- Description -->
         <p class="text-[11px] text-[#7F7F7F] font-light mb-3">{{ task.description }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 mt-6 mb-10">
-            <!-- Tags -->
-            <div class="flex gap-2 mb-4 w-fit">
-              <span 
-                v-for="tag in task.tags" 
-                :key="tag" 
-                class="px-2 py-1 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
-                :class="tagClass(tag)">
-                {{ tag }}
-              </span>
-            </div>
-    
-            <!-- Icons -->
-            <div class="flex justify-end gap-2 mb-4 text-gray-400">
-              <button title="Edit" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1">
-                <Icon name="hugeicons:edit-02" />
-              </button>
-              <button title="Delete" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1">
-               <Icon name="mage:trash-3"/>
-              </button>
-            </div>
-        </div>
+          <!-- Tags -->
+          <div class="flex gap-2 mb-4 w-fit">
+            <span
+              class="px-2 py-2 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
+              :class="{
+                'bg-[#48BB7840] text-[#2B824F]': task.status === 'Completed',
+                'bg-[#FCFAF3] text-[#A78406]': task.status === 'In Progress',
+                'bg-[#F6F7F9]] text-[#485465]': task.status === 'Pending'
+              }"
+            >
+              {{ task.status }}
+            </span>
 
-        <!-- Progress Bar -->
+            <span 
+              v-for="tag in task.tags" 
+              :key="tag" 
+              class="px-2 py-2 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
+              
+              :class="{
+                'bg-[#C200B51F] text-[#C200B5]': tag === 'Work',
+                'bg-[#C200B51F]] text-[#C200B5]': tag === 'Personal'
+              }"
+              >
+              {{ tag }}
+            </span>
 
-      <div class="relative w-full group">
-        <!-- Progress Bar -->
-        <div class="h-1 bg-[#F3F4FC] rounded-[9px] mb-4">
-          <div
-            class="h-1 bg-[#00043D] rounded-[9px] transition-all duration-300"
-            :style="{ width: task.progress + '%' }"
-          ></div>
-        </div>
-
-        <!-- Tooltip -->
-        <div
-          class="absolute -top-7 transform -translate-x-1/2 bg-[#00043D] text-white text-xs font-semibold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300"
-          :style="{ left: task.progress + '%' }"
-        >
-          {{ task.progress }}%
-          <div
-            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#00043D]"
-          ></div>
-        </div>
-      </div>
-
-
-        <!-- <div class="h-1 bg-[#F3F4FC] rounded-[9px] mb-4">
-          <div 
-            class="h-1 bg-[#00043D] rounded-[9px]" 
-            :style="{ width: task.progress + '%' }">
           </div>
-        </div> -->
+  
+          <!-- Icons -->
+          <div class="flex justify-end gap-2 mb-4 text-gray-400">
+            <button title="Edit" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1">
+              <Icon name="hugeicons:edit-02" />
+            </button>
+            <button title="Delete" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1" @click="deleteTask(task.id)">
+              <Icon name="mage:trash-3"/>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="relative w-full group">
+          <div class="h-1 bg-[#F3F4FC] rounded-[9px] mb-4">
+            <div
+              class="h-1 bg-[#00043D] rounded-[9px] transition-all duration-300"
+              :style="{ width: task.progress + '%' }"
+            ></div>
+          </div>
+
+          <!-- Tooltip -->
+          <div
+            class="absolute -top-7 transform -translate-x-1/2 bg-[#00043D] text-white text-xs font-semibold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-300"
+            :style="{ left: task.progress + '%' }"
+          >
+            {{ task.progress }}%
+            <div
+              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#00043D]"
+            ></div>
+          </div>
+        </div>
 
         <!-- Completed Checkbox -->
         <label class="flex items-center text-[10px] font-medium gap-2">
-          <input type="checkbox" v-model="task.completed" class="w-4 h-4 accent-[#00043D]" />
+          <input 
+            type="checkbox" 
+            :checked="task.completed"
+            @change="toggleCompleted(task.id, $event.target.checked)" 
+            class="w-4 h-4 accent-[#00043D]" 
+          />
           <span class="text-[#A8A8A8]">{{ task.completed ? 'Completed' : 'Mark as completed' }}</span>
         </label>
       </div>
     </div>
 
-    <TaskSidebar :open="sidebarOpen" :onClose="() => sidebarOpen = false" />
+    <!-- Sidebars -->
+    <TaskSidebar :open="sidebarOpen" :onClose="() => sidebarOpen = false"  :item="selectedTask" />
     <TaskForm :open="sidebarFormOpen" :onClose="() => sidebarFormOpen = false" />
   </div>
 </template>
