@@ -25,6 +25,7 @@ const activeTab = ref('All To dos')
 
 const sidebarOpen = ref(false)
 const sidebarFormOpen = ref(false)
+const sidebarEditFormOpen = ref(false)
 
 // Map store todos to UI format
 const mappedTasks = computed(() =>
@@ -67,7 +68,11 @@ type MappedTask = {
   tags: string[]
   completed: boolean
   progress: number
-  subtasks?: []
+  subtasks?: Array<{
+    id: number
+    title: string
+    isDone: boolean
+  }>
 }
 
 const selectedTask = ref<MappedTask | null>(null)
@@ -76,6 +81,11 @@ const selectedTask = ref<MappedTask | null>(null)
 const openModal = (item: MappedTask) => {
   selectedTask.value = item
   sidebarOpen.value = true
+}
+
+const openEditModal = (todo: MappedTask) => {
+  selectedTask.value = todo
+  sidebarEditFormOpen.value = true
 }
 
 
@@ -168,11 +178,11 @@ function deleteTask(id: number) {
             >
               <input
                 type="checkbox"
-                v-model="task.subtasks[index].isDone"
+                v-model="subtask.completed"
                 class="w-4 h-4 text-blue-600 border-gray-300 rounded"
               />
               <span
-                :class="{ 'line-through text-gray-400': subtask.isDone }"
+                :class="{ 'line-through text-gray-400': subtask?.completed }"
                 class="text-sm text-gray-700"
               >
                 {{ subtask.title }}
@@ -183,7 +193,7 @@ function deleteTask(id: number) {
 
 
         <!-- Description -->
-        <p class="text-[11px] text-[#7F7F7F] font-light mb-3">{{ task.description }}</p>
+        <p class="text-[11px] text-[#7F7F7F] font-light mb-3 break-words whitespace-normal">{{ task.description }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 mt-6 mb-10">
           <!-- Tags -->
@@ -216,7 +226,7 @@ function deleteTask(id: number) {
   
           <!-- Icons -->
           <div class="flex justify-end gap-2 mb-4 text-gray-400">
-            <button title="Edit" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1">
+            <button title="Edit" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1" @click="openEditModal(task)">
               <Icon name="hugeicons:edit-02" />
             </button>
             <button title="Delete" class="border border-[#E6E6E6D9] rounded-lg px-3 py-1" @click="deleteTask(task.id)">
@@ -260,7 +270,8 @@ function deleteTask(id: number) {
     </div>
 
     <!-- Sidebars -->
-    <TaskSidebar :open="sidebarOpen" :onClose="() => sidebarOpen = false"  :item="selectedTask" />
+    <TaskSidebar :open="sidebarOpen" :onClose="() => sidebarOpen = false"  :item="selectedTask"  />
     <TaskForm :open="sidebarFormOpen" :onClose="() => sidebarFormOpen = false" />
+    <EditTask :open="sidebarEditFormOpen" :onClose="() => sidebarEditFormOpen = false" :todo="selectedTask"/>
   </div>
 </template>

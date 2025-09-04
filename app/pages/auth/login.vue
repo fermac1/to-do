@@ -7,13 +7,15 @@
       <div>
         <label class="block text-[10px] text-[#010101] uppercase font-semibold mb-1">Email Address</label>
         <input type="email" placeholder="Enter your email address"
-               class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+               class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               v-model="email" />
       </div>
 
       <div>
         <label class="block text-[10px] text-[#010101] uppercase font-semibold mb-1">Password</label>
         <input type="password" placeholder="Enter a password"
-               class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+               class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+               v-model="password" />
       </div>
 
       <button type="submit"
@@ -35,9 +37,26 @@ definePageMeta({
   layout: 'auth-layout'
 })
 
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
 const router = useRouter()
+const userStore = useUserStore()
+
+const email = ref('')
+const password = ref('')
 
 const handleLogin = () => {
+  if (!email.value || !password.value) {
+    alert('Please fill in both fields.')
+    return
+  }
+
+  // Save credentials to store (or just email, for practical reasons)
+  userStore.setCredentials(email.value, password.value)
+
+  // Redirect
   router.push('/dashboard')
 }
 </script>

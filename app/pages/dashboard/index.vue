@@ -4,6 +4,10 @@ definePageMeta({
 })
 
 import { usePageTitle } from '~/composables/usePageTitle'
+import { useUserStore } from '~/stores/user'
+
+const userStore = useUserStore()
+console.log('User email:', userStore.email)
 
 const { pageTitle } = usePageTitle()
 pageTitle.value = 'Dashboard'

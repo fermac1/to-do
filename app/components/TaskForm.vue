@@ -226,13 +226,13 @@ const addSubtask = () => {
                     <div v-for="(subtask, index) in subtasks" :key="index" class="flex items-center gap-3">
                       <!-- Checkbox -->
                       <input
-                      v-model="subtask[index]?.isDone"
+                      v-model="subtask.isDone"
                         type="checkbox"
                         class="w-4 h-4 rounded border-gray-300 accent-[#0D1CF2]"
                       />
                       <!-- Underline input -->
                       <input
-                        v-model="subtask[index]?.title"
+                        v-model="subtask.title"
                         type="text"
                         placeholder=""
                         class="flex-1 border-b border-gray-200 focus:outline-none focus:border-gray-400 text-sm text-gray-700"

@@ -48,6 +48,26 @@ const attachments: Attachment[] = [
   { name: "Homepage_Design_V2.pdf", size: "2.4MB", type: "pdf" },
   { name: "Homepage_Design_V2.jpeg", size: "2.4MB", type: "jpeg" }
 ]
+
+// priority colors
+const priorityColorMap: Record<string, { bg: string; text: string, border: string }> = {
+  High: {
+    border: 'border-[#FB0404]',
+    bg: 'bg-[#FAE5E5]',
+    text: 'text-[#FB0404]'
+  },
+  Mid: {
+    border: 'border-[#48BB78]',
+    bg: 'bg-[#EBF5EF]',
+    text: 'text-[#389F63]'
+  },
+  Low: {
+    border: 'border-[#ECBD13]',
+    bg: 'bg-[#F9F5E6]',
+    text: 'text-[#CAA10C]'
+  }
+}
+
 </script>
 
 <template>
@@ -96,13 +116,31 @@ const attachments: Attachment[] = [
                     <p class="font-medium text-[#000000]">{{ props?.item?.dueDate }}</p>
                 </div>
              </div>
-             <div class="flex items-center gap-2">
-                <span class="bg-[#F8CECE] px-2 py-1 border border-[#E5E7EB] rounded-full"><Icon name="heroicons:flag-16-solid" class="text-[#FB0404]" /></span>
-                <div class="text-[12px]">
-                    <p class="text-[#6B7280] font-light">Priority</p>
-                    <p class="font-medium text-[#000000]">{{ props?.item?.priority }}</p>
-                </div>
-             </div>
+            <div class="flex items-center gap-2" v-if="props?.item?.priority">
+              <!-- Icon with dynamic background and text color -->
+              <span
+                :class="[
+                  'px-2 py-1 border rounded-full',
+                  priorityColorMap[props?.item?.priority]?.bg,
+                  'border-[#E5E7EB]'
+                ]"
+              >
+                <Icon
+                  name="heroicons:flag-16-solid"
+                  :class="[priorityColorMap[props?.item?.priority]?.text]"
+                />
+              </span>
+
+
+              <!-- Text -->
+              <div class="text-[12px]">
+                <p class="text-[#6B7280] font-light">Priority</p>
+                <p class="font-medium text-[#000000] capitalize">
+                  {{ props?.item?.priority }} Priority
+                </p>
+              </div>
+            </div>
+
            </div>
 
            <div class="-mx-6 w-[calc(100%+3rem)] h-px bg-[#E6E6E673] mt-20 mb-12"></div>
@@ -110,7 +148,7 @@ const attachments: Attachment[] = [
            <!-- Description -->
            <div>
              <h3 class="font-bold text-[#37404E] text-[16px] mb-2">Description</h3>
-             <p class="text-[#37404E] text-[12px] font-light leading-relaxed">{{ props?.item?.description }}</p>
+             <p class="text-[#37404E] text-[12px] font-light break-words whitespace-normal">{{ props?.item?.description }}</p>
            </div>
    
            <!-- Subtasks -->
@@ -126,7 +164,7 @@ const attachments: Attachment[] = [
            </div> -->
 
            
-            <div v-if="props?.item?.subtasks && props?.item?.subtasks.length">
+            <div v-if="props?.item?.subtasks?.length">
               <h4 class="text-sm font-medium text-gray-700 mb-2">Subtasks</h4>
               <ul class="space-y-1">
                 <li
@@ -136,17 +174,21 @@ const attachments: Attachment[] = [
                 >
                   <input
                     type="checkbox"
-                    v-model="props?.item?.subtasks[index]"
+                    v-model="subtask.isDone"
                     class="w-4 h-4 text-blue-600 border-gray-300 rounded"
                   />
                   <span
-                    :class="{ 'line-through text-gray-400': subtask.isDone }"
+                    :class="{ 'line-through text-gray-400': subtask?.isDone }"
                     class="text-sm text-gray-700"
                   >
                     {{ subtask.title }}
                   </span>
                 </li>
               </ul>
+            </div>
+
+            <div v-else>
+              <p class="text-sm text-gray-500">No subtasks available.</p>
             </div>
    
            <!-- Attachments -->
