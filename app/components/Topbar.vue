@@ -14,7 +14,7 @@
 
     <div class="flex items-center space-x-4">
       <!-- search icon -->
-       <div class="relative">
+       <div class="relative md:block hidden">
 
          <Icon name="basil:search-solid" class="w-4 h-4 text-[#424242] absolute top-3 left-3" />
          <input type="text" placeholder="Search for tasks and more..."
