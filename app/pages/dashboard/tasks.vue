@@ -161,7 +161,7 @@ console.log('todos', todos.value);
     </div>
 
     <!-- Tabs -->
-    <div class="flex flex-wrap md:flex-nowrap gap-4 mb-6 border border-[#F1F1F1] rounded-[48px] p-2 w-fit">
+    <div class="flex flex-wrap md:flex-nowrap gap-4 mb-6 md:border border-[#F1F1F1] rounded-[48px] p-2 w-fit">
       <button 
         v-for="tab in tabs" 
         :key="tab" 
