@@ -57,13 +57,6 @@ const subtasks = ref<{ title: string; completed: boolean }[]>([
   { title: '', completed: false }
 ])
 
-//  const structuredSubtasks = subtasks.value
-//     .filter(task => task.trim()) // remove empty ones
-//     .map(task => ({
-//       title: task,
-//       completed: false
-//     }))
-
 // Submit form
 const handleSubmit = () => {
   if (!title.value.trim()) {
@@ -76,16 +69,12 @@ const handleSubmit = () => {
     return
   }
 
-  //  const structuredSubtasks = subtasks.value
-  //   .filter(s => s.trim()) // only keep non-empty
-  //   .map(title => ({ title, completed: false }))
-
-    const structuredSubtasks = subtasks.value
+  const structuredSubtasks = subtasks.value
     .filter(s => s.title.trim()) // Remove empty titles
     .map(s => ({
       title: s.title.trim(),
       completed: s.completed
-    }))
+  }))
 
   const newTodo = {
     id: Date.now(),
@@ -106,13 +95,6 @@ const handleSubmit = () => {
   openModal()
 
 }
-
-// sub tasks
-// const subtasks = ref(['', '', ''])
-
-// const addSubtask = () => {
-//   subtasks.value.push('')
-// }
 
 const addSubtask = () => {
   subtasks.value.push({ title: '', completed: false })
@@ -157,7 +139,7 @@ const addSubtask = () => {
             <div>
               <label class="block text-[#37404E] text-[14px] font-semibold mb-2">Date</label>
               <!-- <div class="flex items-center justify-between border rounded-lg"> -->
-                <input type="date" class="px-4 py-2 md:px-6 md:py-3 accent-text-[#718096CC] bg-[#E6E6E61A] border border-[#E6E6E680] rounded-lg text-[#37404E] text-[10px] font-normal focus:outline-none" v-model="date">
+                <input type="date" class="w-full px-4 py-2 md:px-6 md:py-3 accent-text-[#718096CC] bg-[#E6E6E61A] border border-[#E6E6E680] rounded-lg text-[#37404E] text-[10px] font-normal focus:outline-none" v-model="date">
                 <!-- <span class="text-gray-400"><Icon name="heroicons:calendar" class="w-4 h-4" /></span> -->
               <!-- </div> -->
             </div>
