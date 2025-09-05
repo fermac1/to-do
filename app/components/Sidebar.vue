@@ -3,11 +3,14 @@
 
     <aside
       :class="[
-        'fixed inset-y-0 left-0 bg-white shadow-md transition-all duration-300 ease-in-out z-40',
-      isSidebarOpen ? 'w-[70vw]' : 'w-64',  // Sidebar takes 70% width of the screen on mobile when open
-      !isMobile ? 'md:w-64' : '',  // Keep 64px on desktop
-    ]"
+        'bg-white shadow-md transition-all duration-300 ease-in-out z-40',
+        isSidebarOpen ? 'w-[70vw]' : 'w-64',  // Sidebar takes 70% width of the screen on mobile when open
+        !isMobile ? 'md:w-64' : '',  // Keep 64px on desktop
+        isMobile
+      ? 'fixed inset-y-0 left-0' : '',  // Only fix position on mobile
+      ]"
     >
+
     <div class="px-6 py-7 font-bold text-[#1F1F1F]">
       <span class="bg-[#000985] px-2 py-1 rounded-[33px] mr-2"><Icon name="solar:bookmark-square-minimalistic-linear" class="text-[#ffffff] "/></span>
        <span class="text-[14px]"> HIZO TASKLY</span>

@@ -194,7 +194,7 @@ console.log('todos', todos.value);
           <span class="text-[10px] font-medium">Due {{ task.dueDate }}</span>
         </div>
 
-        <div v-if="task.subtasks && task.subtasks.length">
+        <!-- <div v-if="task.subtasks && task.subtasks.length">
           <h4 class="text-sm font-medium text-gray-700 mb-2">Subtasks</h4>
           <ul class="space-y-1">
             <li
@@ -215,7 +215,7 @@ console.log('todos', todos.value);
               </span>
             </li>
           </ul>
-        </div>
+        </div> -->
 
 
         <!-- Description -->
