@@ -32,7 +32,7 @@ interface Item {
   subtasks?: Array<{
         id: number
         title: string
-        isDone: boolean
+        completed: boolean
       }>
 }
 
@@ -174,11 +174,11 @@ const priorityColorMap: Record<string, { bg: string; text: string, border: strin
                 >
                   <input
                     type="checkbox"
-                    v-model="subtask.isDone"
+                    v-model="subtask.completed"
                     class="w-4 h-4 text-blue-600 border-gray-300 rounded"
                   />
                   <span
-                    :class="{ 'line-through text-gray-400': subtask?.isDone }"
+                    :class="{ 'line-through text-gray-400': subtask?.completed }"
                     class="text-sm text-gray-700"
                   >
                     {{ subtask.title }}

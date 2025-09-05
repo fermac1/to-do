@@ -16,7 +16,10 @@ const props = defineProps<{
 
 // Success modal
 const showModal = ref(false)
-const userName = 'Pamela'
+const userStore = useUserStore()
+
+// Access user info
+const userName = userStore.email
 
 const openModal = () => (showModal.value = true)
 const closeModal = () => (showModal.value = false)
@@ -43,22 +46,22 @@ const categories = [
 const resetForm = () => {
   title.value = ""
   date.value = ''
-  subtasks.value = [{ title: '', isDone: false }]
+  subtasks.value = [{ title: '', completed: false }]
   priority.value = ""
   category.value = ""
   description.value = ""
 }
 
 // const subtasks = ref<string[]>([])
-const subtasks = ref<{ title: string; isDone: boolean }[]>([
-  { title: '', isDone: false }
+const subtasks = ref<{ title: string; completed: boolean }[]>([
+  { title: '', completed: false }
 ])
 
 //  const structuredSubtasks = subtasks.value
 //     .filter(task => task.trim()) // remove empty ones
 //     .map(task => ({
 //       title: task,
-//       isDone: false
+//       completed: false
 //     }))
 
 // Submit form
@@ -75,13 +78,13 @@ const handleSubmit = () => {
 
   //  const structuredSubtasks = subtasks.value
   //   .filter(s => s.trim()) // only keep non-empty
-  //   .map(title => ({ title, isDone: false }))
+  //   .map(title => ({ title, completed: false }))
 
     const structuredSubtasks = subtasks.value
     .filter(s => s.title.trim()) // Remove empty titles
     .map(s => ({
       title: s.title.trim(),
-      isDone: s.isDone
+      completed: s.completed
     }))
 
   const newTodo = {
@@ -112,7 +115,7 @@ const handleSubmit = () => {
 // }
 
 const addSubtask = () => {
-  subtasks.value.push({ title: '', isDone: false })
+  subtasks.value.push({ title: '', completed: false })
 }
 
 </script>
@@ -226,7 +229,7 @@ const addSubtask = () => {
                     <div v-for="(subtask, index) in subtasks" :key="index" class="flex items-center gap-3">
                       <!-- Checkbox -->
                       <input
-                      v-model="subtask.isDone"
+                      v-model="subtask.completed"
                         type="checkbox"
                         class="w-4 h-4 rounded border-gray-300 accent-[#0D1CF2]"
                       />

@@ -4,9 +4,16 @@
     <p class="text-[#485465] text-[12px] font-medium mb-6">Continue from where you left off</p>
 
     <form class="space-y-4" @submit.prevent="handleLogin">
-      <div>
+      <!-- <div>
         <label class="block text-[10px] text-[#010101] uppercase font-semibold mb-1">Email Address</label>
         <input type="email" placeholder="Enter your email address"
+               class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               v-model="email" />
+      </div> -->
+
+      <div>
+        <label class="block text-[10px] text-[#010101] uppercase font-semibold mb-1">user name</label>
+        <input type="username" placeholder="Enter your full name"
                class="w-full border border-[#71809626] text-[#71809673] text-[14px] font-medium rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                v-model="email" />
       </div>

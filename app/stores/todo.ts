@@ -17,11 +17,18 @@ export const useTodoStore = defineStore('todo', {
         title: string
         completed: boolean
       }>
-    }>
+    }>,
+    searchTerm: ''
   }),
 
   getters: {
-    getTodoById: (state) => (id: number) => state.todos.find((todo) => todo.id === id)
+    getTodoById: (state) => (id: number) => state.todos.find((todo) => todo.id === id),
+    filteredTodos(state) {
+      if (!state.searchTerm) return state.todos
+      return state.todos.filter(todo =>
+        todo.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      )
+    }
   },
 
   actions: {
@@ -53,7 +60,11 @@ export const useTodoStore = defineStore('todo', {
           if (index !== -1) {
               this.todos[index] = updateTodo;
           }
-      },
+    },
+    
+    setSearchTerm(term: string) {
+      this.searchTerm = term
+    },
 
   },
 

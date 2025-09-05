@@ -6,8 +6,12 @@ definePageMeta({
 import { usePageTitle } from '~/composables/usePageTitle'
 import { useUserStore } from '~/stores/user'
 
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 const userStore = useUserStore()
-console.log('User email:', userStore.email)
+// Access user info
+const email = userStore.email
 
 const { pageTitle } = usePageTitle()
 pageTitle.value = 'Dashboard'
@@ -15,12 +19,16 @@ pageTitle.value = 'Dashboard'
 useHead({
   title: pageTitle.value
 })
+
+if (!userStore.email) {
+  router.push('/auth/login')
+}
 </script>
 
 <template>
   <div class="shadow rounded-lg bg-[#ffffff] p-6 border border-gray-200 font-plusJakartaSans">
     <!-- Welcome -->
-    <h1 class="text-[22px] text-[#37404E] font-extrabold mb-2">Welcome back Pamela</h1>
+    <h1 class="text-[22px] text-[#37404E] font-extrabold mb-2">Welcome back {{ email }}</h1>
     <p class="text-[#37404E] text-[13px] font-light mb-6">Your tasks are waiting, neatly organized and ready for you to take charge.</p>
 
     <!-- Overview Cards -->

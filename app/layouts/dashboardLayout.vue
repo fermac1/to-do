@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen bg-gray-50">
     <!-- Sidebar -->
-    <Sidebar :class="{ 'hidden': !isSidebarOpen && isMobile }"/>
+    <Sidebar :class="{ 'hidden': !isSidebarOpen && isMobile }" :isMobile="isMobile" @closeSidebar="toggleSidebar"/>
 
     <!-- Main content -->
     <div class="flex-1 flex flex-col">
@@ -18,7 +18,12 @@
     const isMobile = ref(false)
 
     const toggleSidebar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value
+      isSidebarOpen.value = !isSidebarOpen.value
+    }
+
+    // Handle closeSidebar event from Sidebar component
+    const closeSidebar = () => {
+      isSidebarOpen.value = false
     }
 
     onMounted(() => {

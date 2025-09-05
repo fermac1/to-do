@@ -50,7 +50,7 @@ const mappedTasks = computed(() =>
       dueDate: todo.date,
       priority: todo.priority === 'high' ? 'High' : todo.priority === 'mid' ? 'Mid' : 'Low',
       status,
-      tags: [todo.category],
+      category: [todo.category],
       completed: todo.isCompleted,
       progress,
       subtasks: todo?.subtasks
@@ -65,18 +65,19 @@ type MappedTask = {
   dueDate: string
   priority: string
   status: string
-  tags: string[]
+  category: string[]
   completed: boolean
   progress: number
   subtasks?: Array<{
     id: number
     title: string
-    isDone: boolean
+    completed: boolean
   }>
 }
 
 const selectedTask = ref<MappedTask | null>(null)
 
+const searchTerm = ref('')
 
 const openModal = (item: MappedTask) => {
   selectedTask.value = item
@@ -90,11 +91,33 @@ const openEditModal = (todo: MappedTask) => {
 
 
 const filteredMappedTasks = computed(() => {
-  if (activeTab.value === 'All To dos') return mappedTasks.value
-  if (activeTab.value === 'Completed') return mappedTasks.value.filter(t => t.status === 'Completed')
-  if (activeTab.value === 'In Progress') return mappedTasks.value.filter(t => t.status === 'In Progress')
-  if (activeTab.value === 'Pending') return mappedTasks.value.filter(t => t.status === 'Pending')
-  return mappedTasks.value
+  // if (activeTab.value === 'All To dos') return mappedTasks.value
+  // if (activeTab.value === 'Completed') return mappedTasks.value.filter(t => t.status === 'Completed')
+  // if (activeTab.value === 'In Progress') return mappedTasks.value.filter(t => t.status === 'In Progress')
+  // if (activeTab.value === 'Pending') return mappedTasks.value.filter(t => t.status === 'Pending')
+  // return mappedTasks.value
+
+  let filtered = mappedTasks.value
+
+  // First, filter by tab
+  if (activeTab.value === 'Completed') {
+    filtered = filtered.filter(t => t.status === 'Completed')
+  } else if (activeTab.value === 'In Progress') {
+    filtered = filtered.filter(t => t.status === 'In Progress')
+  } else if (activeTab.value === 'Pending') {
+    filtered = filtered.filter(t => t.status === 'Pending')
+  }
+
+  // Then filter by search term
+  if ((todoStore.searchTerm || '').trim()) {
+    const lowerSearch = (todoStore.searchTerm || '').trim().toLowerCase()
+    filtered = filtered.filter(task =>
+      task.title.toLowerCase().includes(lowerSearch)
+    )
+  }
+
+  return filtered
+
 })
 
 const priorityClass = (priority: string) => {
@@ -117,19 +140,22 @@ function deleteTask(id: number) {
     todoStore.deleteTodo(id)
   }
 }
+
+console.log('todos', todos.value);
+
 </script>
 
 <template>
   <div class="shadow rounded-lg bg-[#ffffff] p-6 border border-gray-200 font-plusJakartaSans">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="md:flex justify-between items-center mb-6 ">
       <div class="text-[#37404E]">
         <h1 class="text-[22px] font-bold">Task Management</h1>
         <p class="text-[13px] font-light">Let's get those tasks done and keep your day moving forward.</p>
       </div>
       <button 
         @click="sidebarFormOpen = true" 
-        class="bg-[#0513D1] text-[#ffffff] px-4 py-3 rounded-lg flex items-center gap-2 text-[14px] font-semibold">
+        class="bg-[#0513D1] text-[#ffffff] px-4 py-3 rounded-lg flex items-center gap-2 text-[14px] font-semibold md:mt-0 mt-4">
         <Icon name="fluent:add-square-20-filled" /> New Task
       </button>
     </div>
@@ -196,7 +222,7 @@ function deleteTask(id: number) {
         <p class="text-[11px] text-[#7F7F7F] font-light mb-3 break-words whitespace-normal">{{ task.description }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 mt-6 mb-10">
-          <!-- Tags -->
+          <!-- category -->
           <div class="flex gap-2 mb-4 w-fit">
             <span
               class="px-2 py-2 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
@@ -210,7 +236,7 @@ function deleteTask(id: number) {
             </span>
 
             <span 
-              v-for="tag in task.tags" 
+              v-for="tag in task.category" 
               :key="tag" 
               class="px-2 py-2 text-[8px] font-normal border border-[#E5E7EB] rounded-full"
               

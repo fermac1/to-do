@@ -1,5 +1,13 @@
 <template>
-  <aside class="w-64 bg-white shadow-md flex flex-col">
+  <!-- <aside class="w-64 bg-white shadow-md flex flex-col"> -->
+
+    <aside
+      :class="[
+        'fixed inset-y-0 left-0 bg-white shadow-md transition-all duration-300 ease-in-out z-40',
+      isSidebarOpen ? 'w-[70vw]' : 'w-64',  // Sidebar takes 70% width of the screen on mobile when open
+      !isMobile ? 'md:w-64' : '',  // Keep 64px on desktop
+    ]"
+    >
     <div class="px-6 py-7 font-bold text-[#1F1F1F]">
       <span class="bg-[#000985] px-2 py-1 rounded-[33px] mr-2"><Icon name="solar:bookmark-square-minimalistic-linear" class="text-[#ffffff] "/></span>
        <span class="text-[14px]"> HIZO TASKLY</span>
@@ -16,6 +24,7 @@
             to="/dashboard"
             class="flex items-center space-x-2 px-6 py-3 rounded-[6px] hover:bg-[#000CB00A]"
             :class="isActive('/dashboard') ? 'bg-[#000CB00A] text-[#000CB0] font-bold' : 'text-gray-700'"
+            @click="emitCloseSidebar" 
           >
             <Icon name="mage:dashboard-minus-fill" :class="isActive('/dashboard') ? 'text-[#000CB0]' : ''" />
             <span class="text-[11px]">Dashboard</span>
@@ -28,6 +37,7 @@
             to="/dashboard/tasks"
             class="flex items-center space-x-2 px-6 py-3 rounded-[6px] hover:bg-[#000CB00A]"
             :class="isActive('/dashboard/tasks') ? 'bg-[#000CB00A] text-[#000CB0] font-bold' : 'text-gray-700'"
+            @click="emitCloseSidebar" 
           >
             <Icon name="hugeicons:note" :class="isActive('/dashboard/tasks') ? 'text-[#000CB0]' : ''" />
             <span class="text-[11px]">Task Management</span>
@@ -43,5 +53,17 @@
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const props = defineProps({
+  isSidebarOpen: Boolean,
+  isMobile: Boolean
+})
+
+const emit = defineEmits()
+// Emit close event when sidebar is toggled on mobile
+const emitCloseSidebar = () => {
+  if (props.isMobile) {
+    emit('closeSidebar') // This emits the closeSidebar event to the parent
+  }
+}
 const isActive = (path: string) => route.path === path
 </script>

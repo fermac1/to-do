@@ -12,10 +12,10 @@ const props = defineProps<{
     description: string
     dueDate: string
     priority: string
-    tags: string
+    category: string
     subtasks?: Array<{
       title: string
-      isDone: boolean
+      completed: boolean
     }>
   }
 }>()
@@ -34,8 +34,8 @@ const title = ref('')
 const description = ref('')
 const dueDate = ref('')
 const priority = ref('')
-const tags = ref('')
-const subtasks = ref<{ title: string; isDone: boolean }[]>([])
+const category = ref('')
+const subtasks = ref<{ title: string; completed: boolean }[]>([])
 
 // Options
 const priorities = [
@@ -58,7 +58,7 @@ watch(
       description.value = props.todo.description
       dueDate.value = props.todo.dueDate
       priority.value = props.todo.priority
-      tags.value = Array.isArray(props.todo.tags) ? props.todo.tags[0] : props.todo.tags || ''
+      category.value = Array.isArray(props.todo.category) ? props.todo.category[0] : props.todo.category || ''
       subtasks.value = props.todo.subtasks ? [...props.todo.subtasks] : []
     }
   },
@@ -71,7 +71,7 @@ console.log('props', props.todo);
 
 // Add a new subtask
 const addSubtask = () => {
-  subtasks.value.push({ title: '', isDone: false })
+  subtasks.value.push({ title: '', completed: false })
 }
 
 // Submit the edited form
@@ -81,7 +81,7 @@ const handleSubmit = () => {
     return
   }
 
-  if (!priority.value || !tags.value) {
+  if (!priority.value || !category.value) {
     alert("Please select priority and category")
     return
   }
@@ -90,7 +90,7 @@ const handleSubmit = () => {
     .filter(s => s.title.trim())
     .map(s => ({
       title: s.title.trim(),
-      isDone: s.isDone
+      completed: s.completed
     }))
 
   const updatedTodo = {
@@ -99,7 +99,7 @@ const handleSubmit = () => {
     description: description.value,
     date: dueDate.value,
     priority: priority.value,
-    tags: [tags.value],
+    category: category.value,
     subtasks: updatedSubtasks
   }
   
@@ -108,9 +108,6 @@ const handleSubmit = () => {
 }
 console.log('props', props.todo);
 
- console.log('date', dueDate.value);
-  console.log('priority', priority.value);
-  console.log('tags', tags.value);
 </script>
 
 <template>
@@ -146,7 +143,7 @@ console.log('props', props.todo);
               placeholder="Input Task title"
             />
           </div>
-          <p>tags: {{ tags }}</p>
+          <p>tags: {{ category }}</p>
 
 
           <!-- Date, Priority, Category -->
@@ -182,7 +179,7 @@ console.log('props', props.todo);
             <div>
               <label class="block text-[#37404E] text-[14px] font-semibold mb-2">Category</label>
               <select
-                v-model="tags"
+                v-model="category"
                 class="w-full bg-[#E6E6E61A] border border-[#E6E6E680] rounded-lg px-4 py-2 md:px-6 md:py-3 text-[#37404E] text-[10px] font-normal focus:outline-none"
               >
                 <option disabled value="">What type of task?</option>
@@ -222,7 +219,7 @@ console.log('props', props.todo);
                   >
                     <input
                       type="checkbox"
-                      v-model="subtask.isDone"
+                      v-model="subtask.completed"
                       class="w-4 h-4 text-blue-600 border-gray-300 rounded"
                     />
                     <input
