@@ -138,10 +138,7 @@ const addSubtask = () => {
             <!-- Date -->
             <div>
               <label class="block text-[#37404E] text-[14px] font-semibold mb-2">Date</label>
-              <!-- <div class="flex items-center justify-between border rounded-lg"> -->
                 <input type="date" class="w-full px-4 py-2 md:px-6 md:py-3 accent-text-[#718096CC] bg-[#E6E6E61A] border border-[#E6E6E680] rounded-lg text-[#37404E] text-[10px] font-normal focus:outline-none" v-model="date">
-                <!-- <span class="text-gray-400"><Icon name="heroicons:calendar" class="w-4 h-4" /></span> -->
-              <!-- </div> -->
             </div>
   
               <!-- Priority -->
