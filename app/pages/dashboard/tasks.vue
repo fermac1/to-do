@@ -128,12 +128,26 @@ const priorityClass = (priority: string) => {
 }
 
 // Handle checkbox toggle to update store
+// const toggleCompleted = (taskId: number, value: boolean) => {
+//   const todo = todoStore.todos.find(t => t.id === taskId)
+//   if (todo) {
+//     todo.isCompleted = value
+//   }
+// }
 const toggleCompleted = (taskId: number, value: boolean) => {
   const todo = todoStore.todos.find(t => t.id === taskId)
   if (todo) {
     todo.isCompleted = value
+
+    // If the task has subtasks, update all of them
+    if (todo.subtasks?.length) {
+      todo.subtasks.forEach(subtask => {
+        subtask.completed = value
+      })
+    }
   }
 }
+
 
 function deleteTask(id: number) {
   if (window.confirm('Are you sure you want to delete this task?')) {

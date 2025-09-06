@@ -28,6 +28,41 @@ export const useTodoStore = defineStore('todo', {
       return state.todos.filter(todo =>
         todo.title.toLowerCase().includes(state.searchTerm.toLowerCase())
       )
+    },
+
+    // stats
+    totalTasks(state) {
+      return state.todos.length
+    },
+
+    completedTasks(state) {
+      return state.todos.filter(todo => {
+        if (todo.subtasks?.length) {
+          const completed = todo.subtasks.filter(s => s.completed).length
+          return completed === todo.subtasks.length
+        }
+        return todo.isCompleted
+      }).length
+    },
+
+    inProgressTasks(state) {
+      return state.todos.filter(todo => {
+        if (todo.subtasks?.length) {
+          const completed = todo.subtasks.filter(s => s.completed).length
+          return completed > 0 && completed < todo.subtasks.length
+        }
+        return !todo.isCompleted
+      }).length
+    },
+
+    pendingTasks(state) {
+      return state.todos.filter(todo => {
+        if (todo.subtasks?.length) {
+          const completed = todo.subtasks.filter(s => s.completed).length
+          return completed === 0
+        }
+        return !todo.isCompleted
+      }).length
     }
   },
 

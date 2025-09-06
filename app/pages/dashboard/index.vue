@@ -5,6 +5,9 @@ definePageMeta({
 
 import { usePageTitle } from '~/composables/usePageTitle'
 import { useUserStore } from '~/stores/user'
+import { useTodoStore } from '@/stores/todo'
+import { storeToRefs } from 'pinia'
+
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -23,6 +26,16 @@ useHead({
 if (!userStore.email) {
   router.push('/auth/login')
 }
+
+// Access todos
+const todoStore = useTodoStore()
+
+const {
+  totalTasks,
+  completedTasks,
+  inProgressTasks,
+  pendingTasks
+} = storeToRefs(todoStore)
 </script>
 
 <template>
@@ -43,19 +56,19 @@ if (!userStore.email) {
           <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-6 mt-10">
             <div class="md:border-r border-[#F0F0F0] p-4 text-center">
               <h3 class="font-semibold text-[#424242] text-[9px]">TOTAL TASKS</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">20</p>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ totalTasks }}</p>
             </div>
             <div class="md:border-r border-[#F0F0F0] p-4 text-center">
               <h3 class="font-semibold text-[#424242] text-[9px]">TASKS DUE</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">10</p>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">0</p>
             </div>
             <div class="md:border-r border-[#F0F0F0] p-4 text-center">
               <h3 class="font-semibold text-[#424242] text-[9px]">COMPLETED</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">5</p>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ completedTasks }}</p>
             </div>
             <div class="p-4 text-center">
-              <h3 class="font-semibold text-[#424242] text-[9px]">OVERDUE TASKS</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">10</p>
+              <h3 class="font-semibold text-[#424242] text-[9px]">PENDING TASKS</h3>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ pendingTasks }}</p>
             </div>
           </div>
       </div>

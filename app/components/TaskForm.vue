@@ -24,8 +24,9 @@ const userName = userStore.email
 const openModal = () => (showModal.value = true)
 const closeModal = () => (showModal.value = false)
 
+const today = new Date().toISOString().split('T')[0]
 // Form state
-const date = ref("2025-03-24") // YYYY-MM-DD for input[type=date]
+const date = ref(today) // YYYY-MM-DD for input[type=date]
 const priority = ref<string>("")
 const category = ref<string>("")
 const description = ref("")

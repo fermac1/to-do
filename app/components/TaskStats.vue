@@ -118,39 +118,47 @@ import { storeToRefs } from 'pinia'
 
 // Access todos
 const todoStore = useTodoStore()
-const { todos } = storeToRefs(todoStore)
+// const { todos } = storeToRefs(todoStore)
 
-const totalTasks = computed(() => todos.value.length)
+const {
+    todos,
+  totalTasks,
+  completedTasks,
+  inProgressTasks,
+  pendingTasks
+} = storeToRefs(todoStore)
 
-const completedTasks = computed(() =>
-  todos.value.filter(todo => {
-    if (todo.subtasks?.length) {
-      const completed = todo.subtasks.filter(s => s.completed).length
-      return completed === todo.subtasks.length
-    }
-    return todo.isCompleted
-  }).length
-)
+// const totalTasks = computed(() => todos.value.length)
 
-const inProgressTasks = computed(() =>
-  todos.value.filter(todo => {
-    if (todo.subtasks?.length) {
-      const completed = todo.subtasks.filter(s => s.completed).length
-      return completed > 0 && completed < todo.subtasks.length
-    }
-    return !todo.isCompleted
-  }).length
-)
+// const completedTasks = computed(() =>
+//   todos.value.filter(todo => {
+//     if (todo.subtasks?.length) {
+//       const completed = todo.subtasks.filter(s => s.completed).length
+//       return completed === todo.subtasks.length
+//     }
+//     return todo.isCompleted
+//   }).length
+// )
 
-const pendingTasks = computed(() =>
-  todos.value.filter(todo => {
-    if (todo.subtasks?.length) {
-      const completed = todo.subtasks.filter(s => s.completed).length
-      return completed === 0
-    }
-    return !todo.isCompleted
-  }).length
-)
+// const inProgressTasks = computed(() =>
+//   todos.value.filter(todo => {
+//     if (todo.subtasks?.length) {
+//       const completed = todo.subtasks.filter(s => s.completed).length
+//       return completed > 0 && completed < todo.subtasks.length
+//     }
+//     return !todo.isCompleted
+//   }).length
+// )
+
+// const pendingTasks = computed(() =>
+//   todos.value.filter(todo => {
+//     if (todo.subtasks?.length) {
+//       const completed = todo.subtasks.filter(s => s.completed).length
+//       return completed === 0
+//     }
+//     return !todo.isCompleted
+//   }).length
+// )
 
 const piePercent = (count: number) => {
   const total = completedTasks.value + inProgressTasks.value + pendingTasks.value
