@@ -235,7 +235,7 @@ console.log('props', props.todo);
                 @click="addSubtask"
                 class="ml-4 flex todos-center justify-center w-8 h-8 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100"
               >
-                <Icon name="heroicons:plus" class="w-4 h-4" />
+                <Icon name="heroicons:plus" class="w-2 h-2 md:w-4 md:h-4" />
               </button>
             </div>
           </div>

@@ -63,7 +63,53 @@ export const useTodoStore = defineStore('todo', {
         }
         return !todo.isCompleted
       }).length
+    },
+
+    isToday: () => (dateStr: string) => {
+      const today = new Date()
+      const taskDate = new Date(dateStr)
+      return (
+        taskDate.getDate() === today.getDate() &&
+        taskDate.getMonth() === today.getMonth() &&
+        taskDate.getFullYear() === today.getFullYear()
+      )
+    },
+
+    isThisWeek: () => (dateStr: string) => {
+      const today = new Date()
+      const taskDate = new Date(dateStr)
+      const startOfWeek = new Date(today)
+      startOfWeek.setDate(today.getDate() - today.getDay())
+
+      const endOfWeek = new Date(startOfWeek)
+      endOfWeek.setDate(startOfWeek.getDate() + 6)
+
+      // zero out the time part to avoid false negatives
+      startOfWeek.setHours(0, 0, 0, 0)
+      endOfWeek.setHours(23, 59, 59, 999)
+
+      return taskDate >= startOfWeek && taskDate <= endOfWeek
+    },
+
+    dailyTasks(state): number {
+      return state.todos.filter(todo => this.isToday(todo.date)).length
+    },
+
+    weeklyTasks(state): number {
+      return state.todos.filter(todo => this.isThisWeek(todo.date)).length
+    },
+
+    overdueTasks(state): number {
+      const now = new Date()
+      now.setHours(0, 0, 0, 0) // Only compare date part
+
+      return state.todos.filter(todo => {
+        const taskDate = new Date(todo.date)
+        taskDate.setHours(0, 0, 0, 0)
+        return taskDate < now && !todo.isCompleted
+      }).length
     }
+
   },
 
   actions: {

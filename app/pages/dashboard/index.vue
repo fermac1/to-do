@@ -34,7 +34,10 @@ const {
   totalTasks,
   completedTasks,
   inProgressTasks,
-  pendingTasks
+  pendingTasks,
+  dailyTasks,
+  weeklyTasks,
+  overdueTasks
 } = storeToRefs(todoStore)
 </script>
 
@@ -60,15 +63,15 @@ const {
             </div>
             <div class="md:border-r border-[#F0F0F0] p-4 text-center">
               <h3 class="font-semibold text-[#424242] text-[9px]">TASKS DUE</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">0</p>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ dailyTasks }}</p>
             </div>
             <div class="md:border-r border-[#F0F0F0] p-4 text-center">
               <h3 class="font-semibold text-[#424242] text-[9px]">COMPLETED</h3>
               <p class="text-[42px] text-[#2E2E2E] font-medium">{{ completedTasks }}</p>
             </div>
             <div class="p-4 text-center">
-              <h3 class="font-semibold text-[#424242] text-[9px]">PENDING TASKS</h3>
-              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ pendingTasks }}</p>
+              <h3 class="font-semibold text-[#424242] text-[9px]">OVERDUE TASKS</h3>
+              <p class="text-[42px] text-[#2E2E2E] font-medium">{{ overdueTasks }}</p>
             </div>
           </div>
       </div>
