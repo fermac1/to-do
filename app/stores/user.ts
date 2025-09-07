@@ -10,7 +10,14 @@ export const useUserStore = defineStore('user', {
     setCredentials(email: string, password: string) {
       this.email = email
       this.password = password
+    },
+      
+        // Clear user state (logout)
+    logout() {
+        this.email = ''
+        this.password = ''
     }
+  
   },
   persist: true 
 })

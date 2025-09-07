@@ -77,12 +77,6 @@ const {
       </div>
 
       <div class="bg-[#E6E6E61A] rounded-[12px] p-6 md:col-span-1">
-          <!-- <div class="flex flex-wrap md:flex-nowrap justify-between">
-              <span class="text-[#2E2E2E] font-extrabold text-[12px]">Pomodoro Timer</span>
-              <span class="border rounded-[6px] border-[#EBEEF5] text-[#626262] text-[11px] font-semibold px-3 py-1 cursor-pointer bg-[#F3F4FC]">Start</span>
-              <span class="border rounded-[6px] border-[#EBEEF5] text-[#ffffff] text-[11px] font-semibold px-3 py-1 cursor-pointer bg-[#00043D]">Finish</span>
-          </div> -->
-
           <PomodoroTimer />
       </div>
         

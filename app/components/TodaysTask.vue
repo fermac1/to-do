@@ -43,7 +43,9 @@ const todaysTasks = computed(() =>
 
 const toggleTask = (id: number) => {
   const task = todaysTasks.value.find(t => t.id === id)
-  if (task) task.completed = !task.completed
+    if (task) task.completed = !task.completed
+console.log('task.completed', todaysTasks.value);
+  
 }
 
 const priorityClass = (priority: string) => {
@@ -52,6 +54,7 @@ const priorityClass = (priority: string) => {
   if (priority === 'Low') return 'bg-[#F9F5E6] text-[#CAA10C] border border-[#ECBD13]'
   return ''
 }
+
 </script>
 
 
@@ -60,7 +63,7 @@ const priorityClass = (priority: string) => {
     <p class="font-semibold text-[#2E2E2E] text-[12px]">Today's task</p>
     <p class="text-[10px] text-[#37404E] font-light mb-4">A list of all your tasks for today</p>
 
-    <div v-if="todaysTasks.length === 0" class="text-gray-500">No tasks for today 🎉</div>
+    <div v-if="todaysTasks.length === 0" class="text-[10px] text-[#626262] text-center">No tasks for today</div>
 
     <ul class="space-y-4">
       <li v-for="task in todaysTasks" :key="task.id" class="flex items-center justify-between p-4 rounded-lg border border-gray-200">
@@ -68,14 +71,15 @@ const priorityClass = (priority: string) => {
         <button
           @click="toggleTask(task.id)"
           class="w-5 h-5 rounded-full border flex items-center justify-center mr-3"
-          :class="task.completed ? 'bg-indigo-900 text-white border-indigo-900' : 'border-gray-400'"
+          :class="task.completed === true ? 'bg-[#00043D] text-white border-[#00043D]' : 'border-[#626262]'"
         >
-          <span v-if="task.completed"><Icon name="ic:round-check" class="w-4 h-4" /></span>
+       
+          <span v-if="task.completed === true"><Icon name="ic:round-check" class="w-4 h-4 text-white" /></span>
         </button>
 
         <!-- Task title -->
-        <span class="flex-1 text-[#626262] text-[11px] font-normal"
-              :class="task.completed ? 'line-through text-gray-400' : ''">
+        <span class="flex-1 text-[#626262] text-[11px] font-light"
+              :class="task.completed ? 'line-through' : ''">
           {{ task.title }}
         </span>
 

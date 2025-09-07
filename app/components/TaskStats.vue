@@ -40,45 +40,47 @@
     <div class="flex flex-col md:flex-row items-center justify-between">
         <!-- Donut Chart -->
         <div class="relative w-40 h-40 mx-auto">
-            <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]">
-                <!-- Completed (green) -->
-                <path
-                class="text-[#48BB78]"
-                :stroke-dasharray="`${piePercent(completedTasks)}, 100`"
-                stroke-width="8"
-                stroke="currentColor"
-                fill="none"
-                d="M18 5
-                    a 13 13 0 0 1 0 26
-                    a 13 13 0 0 1 0 -26"
-                />
-
-                <!-- In Progress (yellow) -->
-                <path
-                class="text-[#ECBD13]"
-                :stroke-dasharray="`${piePercent(inProgressTasks)}, 100`"
-                stroke-width="8"
-                stroke="currentColor"
-                fill="none"
-                :stroke-dashoffset="`-${piePercent(completedTasks)}`"   
-                d="M18 5
-                    a 13 13 0 0 1 0 26
-                    a 13 13 0 0 1 0 -26"
-                />
-
-                <!-- Pending (gray) -->
-                <path
-                class="text-[#718096]"
-                :stroke-dasharray="`${piePercent(pendingTasks)}, 100`"
-                stroke-width="8"
-                stroke="currentColor"
-                fill="none"
-                :stroke-dashoffset="`-${piePercent(completedTasks) + piePercent(inProgressTasks)}`"
-                d="M18 5
-                    a 13 13 0 0 1 0 26
-                    a 13 13 0 0 1 0 -26"
-                />
-            </svg>
+            <ClientOnly>
+                <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]">
+                    <!-- Completed (green) -->
+                    <path
+                    class="text-[#48BB78]"
+                    :stroke-dasharray="`${piePercent(completedTasks)}, 100`"
+                    stroke-width="8"
+                    stroke="currentColor"
+                    fill="none"
+                    d="M18 5
+                        a 13 13 0 0 1 0 26
+                        a 13 13 0 0 1 0 -26"
+                    />
+    
+                    <!-- In Progress (yellow) -->
+                    <path
+                    class="text-[#ECBD13]"
+                    :stroke-dasharray="`${piePercent(inProgressTasks)}, 100`"
+                    stroke-width="8"
+                    stroke="currentColor"
+                    fill="none"
+                    :stroke-dashoffset="`-${piePercent(completedTasks)}`"   
+                    d="M18 5
+                        a 13 13 0 0 1 0 26
+                        a 13 13 0 0 1 0 -26"
+                    />
+    
+                    <!-- Pending (gray) -->
+                    <path
+                    class="text-[#718096]"
+                    :stroke-dasharray="`${piePercent(pendingTasks)}, 100`"
+                    stroke-width="8"
+                    stroke="currentColor"
+                    fill="none"
+                    :stroke-dashoffset="`-${piePercent(completedTasks) + piePercent(inProgressTasks)}`"
+                    d="M18 5
+                        a 13 13 0 0 1 0 26
+                        a 13 13 0 0 1 0 -26"
+                    />
+                </svg>
+            </ClientOnly>
 
             <div class="absolute inset-0 flex items-center justify-center">
             <p class="text-2xl font-bold">{{ totalTasks }}</p>
