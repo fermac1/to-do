@@ -14,6 +14,15 @@
     <div class="px-6 py-7 font-bold text-[#1F1F1F]">
       <span class="bg-[#000985] px-2 py-1 rounded-[33px] mr-2"><Icon name="solar:bookmark-square-minimalistic-linear" class="text-[#ffffff] "/></span>
        <span class="text-[14px]"> HIZO TASKLY</span>
+
+          <!-- Close (X) Icon on Mobile -->
+      <button
+        v-if="isMobile"
+        @click="emitCloseSidebar"
+        class="text-xl focus:outline-none rounded-[12px] p-2 absolute top-2 right-2"
+      >
+        <Icon name="mdi:close" class="text-[#000000]"/>
+      </button>
     </div>
   
     <!-- Divider -->
