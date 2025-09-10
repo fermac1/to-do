@@ -38,48 +38,61 @@
 
     <!-- Middle Section -->
     <div class="flex flex-col md:flex-row items-center justify-between">
+
         <!-- Donut Chart -->
         <div class="relative w-40 h-40 mx-auto">
             <ClientOnly>
-                <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]">
-                    <!-- Completed (green) -->
-                    <path
-                    class="text-[#48BB78]"
-                    :stroke-dasharray="`${piePercent(completedTasks)}, 100`"
-                    stroke-width="8"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 5
-                        a 13 13 0 0 1 0 26
-                        a 13 13 0 0 1 0 -26"
-                    />
-    
-                    <!-- In Progress (yellow) -->
-                    <path
-                    class="text-[#ECBD13]"
-                    :stroke-dasharray="`${piePercent(inProgressTasks)}, 100`"
-                    stroke-width="8"
-                    stroke="currentColor"
-                    fill="none"
-                    :stroke-dashoffset="`-${piePercent(completedTasks)}`"   
-                    d="M18 5
-                        a 13 13 0 0 1 0 26
-                        a 13 13 0 0 1 0 -26"
-                    />
-    
-                    <!-- Pending (gray) -->
-                    <path
-                    class="text-[#718096]"
-                    :stroke-dasharray="`${piePercent(pendingTasks)}, 100`"
-                    stroke-width="8"
-                    stroke="currentColor"
-                    fill="none"
-                    :stroke-dashoffset="`-${piePercent(completedTasks) + piePercent(inProgressTasks)}`"
-                    d="M18 5
-                        a 13 13 0 0 1 0 26
-                        a 13 13 0 0 1 0 -26"
-                    />
-                </svg>
+              <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]" v-if="totalTasks === 0">
+                <path
+                  class="text-gray-200"
+                  stroke-width="8"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 5
+                    a 13 13 0 0 1 0 26
+                    a 13 13 0 0 1 0 -26"
+                />
+              </svg>
+
+              <svg viewBox="0 0 36 36" class="w-full h-full rotate-[-90deg]" v-else>
+                  <!-- Completed (green) -->
+                  <path
+                  class="text-[#48BB78]"
+                  :stroke-dasharray="`${piePercent(completedTasks)}, 100`"
+                  stroke-width="8"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 5
+                      a 13 13 0 0 1 0 26
+                      a 13 13 0 0 1 0 -26"
+                  />
+  
+                  <!-- In Progress (yellow) -->
+                  <path
+                  class="text-[#ECBD13]"
+                  :stroke-dasharray="`${piePercent(inProgressTasks)}, 100`"
+                  stroke-width="8"
+                  stroke="currentColor"
+                  fill="none"
+                  :stroke-dashoffset="`-${piePercent(completedTasks)}`"   
+                  d="M18 5
+                      a 13 13 0 0 1 0 26
+                      a 13 13 0 0 1 0 -26"
+                  />
+  
+                  <!-- Pending (gray) -->
+                  <path
+                  class="text-[#718096]"
+                  :stroke-dasharray="`${piePercent(pendingTasks)}, 100`"
+                  stroke-width="8"
+                  stroke="currentColor"
+                  fill="none"
+                  :stroke-dashoffset="`-${piePercent(completedTasks) + piePercent(inProgressTasks)}`"
+                  d="M18 5
+                      a 13 13 0 0 1 0 26
+                      a 13 13 0 0 1 0 -26"
+                  />
+              </svg>
             </ClientOnly>
 
             <div class="absolute inset-0 flex items-center justify-center">
@@ -130,37 +143,6 @@ const {
   pendingTasks
 } = storeToRefs(todoStore)
 
-// const totalTasks = computed(() => todos.value.length)
-
-// const completedTasks = computed(() =>
-//   todos.value.filter(todo => {
-//     if (todo.subtasks?.length) {
-//       const completed = todo.subtasks.filter(s => s.completed).length
-//       return completed === todo.subtasks.length
-//     }
-//     return todo.isCompleted
-//   }).length
-// )
-
-// const inProgressTasks = computed(() =>
-//   todos.value.filter(todo => {
-//     if (todo.subtasks?.length) {
-//       const completed = todo.subtasks.filter(s => s.completed).length
-//       return completed > 0 && completed < todo.subtasks.length
-//     }
-//     return !todo.isCompleted
-//   }).length
-// )
-
-// const pendingTasks = computed(() =>
-//   todos.value.filter(todo => {
-//     if (todo.subtasks?.length) {
-//       const completed = todo.subtasks.filter(s => s.completed).length
-//       return completed === 0
-//     }
-//     return !todo.isCompleted
-//   }).length
-// )
 
 const piePercent = (count: number) => {
   const total = completedTasks.value + inProgressTasks.value + pendingTasks.value
