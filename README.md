@@ -1,7 +1,7 @@
-# To‑Do App (with Login) 📝
+# To‑Do App 📝
 
 A simple to‑do list web application with authentication, deployed on Vercel.  
-Users can log in and manage their tasks — add, complete, and delete todos — all in a user-friendly UI.
+Users can log in and manage their tasks — add, complete and delete todos — all in a user-friendly UI.
 
 ---
 
